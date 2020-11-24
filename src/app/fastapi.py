@@ -3,7 +3,6 @@ from fastapi import FastAPI, Form
 from starlette.responses import Response
 
 from tasks import count_ads
-from app.settings import DELAY
 from common.net import get_region_id
 from mongo.models import Counter
 from mongo.async_database import add_counter, get_results
@@ -33,7 +32,7 @@ async def add(phrase: str = Form(...), region: str = Form(...)) -> Response:
             Counter(phrase=phrase, region_id=region_id)
         )
         counter.id = str(counter.id)
-        count_ads.send_with_options(args=[counter.dict()], delay=DELAY)
+        count_ads.send_with_options(args=[counter.dict()])
         res = json.dumps({'counter_id': counter.id})
         return Response(status_code=201, content=res, media_type='application/json')
     return Response(status_code=400, content='{ "msg": "Region not found" }')

@@ -30,8 +30,7 @@ services:
       - DB_PORT=27017
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - DELAY=3600
-#      - DELAY=3600000
+      - DELAY=3600000
     restart: always
     networks:
       - backend
@@ -50,8 +49,7 @@ services:
       - DB_PORT=27017
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - DELAY=3600
-#      - DELAY=3600000
+      - DELAY=3600000
     command: worker
     restart: always
     networks:
