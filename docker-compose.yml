@@ -1,0 +1,67 @@
+version: '3'
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    environment:
+      - MONGO_INIT_DATABASE=testdb
+    restart: always
+    networks:
+      - backend
+    expose:
+      - 27017-27019
+
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    networks:
+      - backend
+    expose:
+      - 6379
+
+  backend:
+    image: mi-test
+    build: ./
+    container_name: backend
+    environment:
+      - DB_NAME=testdb
+      - DB_HOST=mongo
+      - DB_PORT=27017
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DELAY=3600
+#      - DELAY=3600000
+    restart: always
+    networks:
+      - backend
+    ports:
+      - 80:80
+    depends_on:
+      - mongo
+      - redis
+
+  dramatiq:
+    image: mi-test
+    container_name: dramatiq
+    environment:
+      - DB_NAME=testdb
+      - DB_HOST=mongo
+      - DB_PORT=27017
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DELAY=3600
+#      - DELAY=3600000
+    command: worker
+    restart: always
+    networks:
+      - backend
+    ports:
+      - 9090:9090
+    depends_on:
+      - mongo
+      - redis
+
+networks:
+  backend:
+    name: backend_network
