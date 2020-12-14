@@ -45,7 +45,7 @@ async def add(phrase: str = Form(...), region: str = Form(...), db=Depends(get_a
         count_ads.send_with_options(args=[counter.dict()])
         res = json.dumps({'counter_id': counter.id})
         return Response(status_code=201, content=res, media_type='application/json')
-    return Response(status_code=400, content='{ "msg": "Region not found" }')
+    return Response(status_code=404, content='{ "msg": "Region not found" }')
 
 
 @app.post('/stat')
@@ -74,7 +74,7 @@ async def stat(counter_id: str = Form(...), time_from: int = Form(...),
     if results:
         res = json.dumps(results)
         return Response(status_code=200, content=res, media_type='application/json')
-    return Response(status_code=404, content='{ "msg: "No results with provided arguments" }')
+    return Response(status_code=400, content='{ "msg: "No results with provided arguments" }')
 
 
 @app.post('/stat/with_top')
@@ -96,4 +96,4 @@ async def top(counter_id: str = Form(...), time_from: int = Form(...),
     if results:
         res = json.dumps(results)
         return Response(status_code=200, content=res, media_type='application/json')
-    return Response(status_code=404, content='{ "msg: "No results with provided arguments" }')
+    return Response(status_code=400, content='{ "msg: "No results with provided arguments" }')
