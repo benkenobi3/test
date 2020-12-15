@@ -5,13 +5,13 @@ from dramatiq.brokers.redis import RedisBroker
 
 from app.settings import REDIS, DELAY
 from common.net import get_page
-from mongo import sync_database, get_sync_db
+from mongo import sync_db, get_sync_db
 from mongo.models import Result, Counter
 
 
 dramatiq.set_broker(RedisBroker(host=REDIS['HOST'], port=REDIS['PORT']))
 
-sync_database.connect_to_database()
+sync_db.connect_to_database()
 database = get_sync_db()
 
 logger = logging.getLogger()

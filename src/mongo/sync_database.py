@@ -1,6 +1,5 @@
 from bson import ObjectId
 from pymongo import MongoClient
-from app.settings import DATABASE
 from mongo.models import Result
 
 
@@ -10,9 +9,13 @@ class SyncDatabase:
     counters_collection = None
     results_collection = None
 
+    def __init__(self, connection_uri: str, database_name: str):
+        self.connection_uri = connection_uri
+        self.database_name = database_name
+
     def connect_to_database(self):
-        self.client = MongoClient(host=DATABASE['HOST'], port=DATABASE['PORT'])
-        self.database = self.client[DATABASE['NAME']]
+        self.client = MongoClient(self.connection_uri)
+        self.database = self.client[self.database_name]
         self.counters_collection = self.database['counters']
         self.results_collection = self.database['results']
 

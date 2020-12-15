@@ -1,6 +1,5 @@
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase, AsyncIOMotorCollection
 from bson.objectid import ObjectId
-from app.settings import DATABASE
 from mongo.models import Result, Counter
 
 
@@ -10,9 +9,13 @@ class AsyncDatabase:
     counters_collection: AsyncIOMotorCollection = None
     results_collection: AsyncIOMotorCollection = None
 
+    def __init__(self, connection_uri: str, database_name: str):
+        self.connection_uri = connection_uri
+        self.database_name = database_name
+
     def connect_to_database(self):
-        self.client = AsyncIOMotorClient(host=DATABASE['HOST'], port=DATABASE['PORT'])
-        self.database = self.client[DATABASE['NAME']]
+        self.client = AsyncIOMotorClient(self.connection_uri)
+        self.database = self.client[self.database_name]
         self.counters_collection = self.database.get_collection('counters')
         self.results_collection = self.database.get_collection('results')
 

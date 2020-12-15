@@ -4,7 +4,7 @@ from starlette.responses import Response
 
 from tasks import count_ads
 from common.net import get_region_id
-from mongo import async_database, get_async_db
+from mongo import async_db, get_async_db
 from mongo.models import Counter
 
 
@@ -13,12 +13,12 @@ app = FastAPI()
 
 @app.on_event('startup')
 def startup():
-    async_database.connect_to_database()
+    async_db.connect_to_database()
 
 
 @app.on_event('shutdown')
 def shutdown():
-    async_database.close_database_connection()
+    async_db.close_database_connection()
 
 
 @app.post('/add', status_code=201)
